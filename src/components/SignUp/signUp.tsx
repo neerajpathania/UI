@@ -71,9 +71,13 @@ const SignUp = () => {
             formData.append("password", data.password);
 
             // Dispatch action to sign up user
-            await dispatch(userSignUp(formData)).unwrap();
-            toast.success("Signup Successful");
-            navigate("/login");
+            await dispatch(userSignUp(formData)).unwrap().then((res: any) => {
+                if (res.success) {
+                    toast.success("Signup Successful");
+                    navigate("/login");
+                }
+            })
+
         } catch (error) {
             console.error("Submission Error:", error);
             toast.error("Signup Failed");
@@ -92,16 +96,31 @@ const SignUp = () => {
                                 <Form.Group controlId="formName">
                                     <Form.Label>Name</Form.Label>
                                     <Form.Control type="text" placeholder="Enter your name" {...register('name')} required />
+                                    {errors.email && (
+                                        <p className="text-red-500 text-sm mt-2">
+                                            {errors?.name?.message}
+                                        </p>
+                                    )}
                                 </Form.Group>
 
                                 <Form.Group controlId="formEmail" className="mt-3">
                                     <Form.Label>Email address</Form.Label>
                                     <Form.Control type="email" placeholder="Enter your email" {...register('email')} required />
+                                    {errors.email && (
+                                        <p className="text-red-500 text-sm mt-2">
+                                            {errors?.email?.message}
+                                        </p>
+                                    )}
                                 </Form.Group>
 
                                 <Form.Group controlId="formPassword" className="mt-3">
                                     <Form.Label>Password</Form.Label>
                                     <Form.Control type="password" placeholder="Password" {...register('password')} required />
+                                    {errors.email && (
+                                        <p className="text-red-500 text-sm mt-2">
+                                            {errors?.password?.message}
+                                        </p>
+                                    )}
                                 </Form.Group>
 
                                 <Form.Group controlId="formPhoneNumber" className="mt-3">
