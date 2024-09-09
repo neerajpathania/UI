@@ -3,13 +3,18 @@ import React, { useEffect, useState } from 'react';
 import { Navbar, Nav, Container, Row, Col, Card, Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { LinkContainer } from 'react-router-bootstrap';
-import { getPosts } from '../../services/slices/components/blogs';
+import { getPosts } from '../services/slices/components/blogs';
 const baseUrl = 'http://localhost:5000/uploads/';
 
 const Home = () => {
     const data: any = useSelector((state: any) => state.Post?.posts) || []
-    console.log(data)
     const dispatch: any = useDispatch()
+
+    const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
+
+    const handleReadMore = (index: number) => {
+        setExpandedIndex(index === expandedIndex ? null : index)
+    }
 
     useEffect(() => {
         dispatch(getPosts()).catch((error: any) =>
@@ -42,20 +47,24 @@ const Home = () => {
                     </Col>
                 </Row>
                 <Row>
-                    {data.map((item: any, index: any) => (
-                        <Col key={index} md={4} className="mb-4">
-                            <Card>
-                                <Card.Img variant="top" src={item?.image} alt="Blog Image" />
-                                <Card.Body>
-                                    <Card.Title>{item.title}</Card.Title>
-                                    <Card.Text>
-                                        {item.content}
-                                    </Card.Text>
-                                    <Button variant="primary">Read More</Button>
-                                </Card.Body>
-                            </Card>
-                        </Col>
-                    ))}
+                    {data.map((item: any, index: any) => {
+                        const isExpanded = expandedIndex === index;
+                        return (
+                            <Col key={index} md={4} className="mb-4">
+                                <Card>
+                                    <Card.Img variant="top" src={item?.image} alt="Blog Image" />
+                                    <Card.Body>
+                                        <Card.Title>{item.title}</Card.Title>
+                                        <Card.Text className={isExpanded ? 'expanded' : 'collapsed'}>
+                                            {item.content}
+                                        </Card.Text>
+                                        <Button variant="primary" onClick={() => handleReadMore(index)}>{isExpanded ? 'Read Less' : 'Read More'}</Button>
+                                    </Card.Body>
+                                </Card>
+                            </Col>
+                        )
+
+                    })}
                 </Row>
             </Container>
 

@@ -76,6 +76,10 @@ const LoginPage = () => {
         }
     }
 
+    const handleForgetButton = () => {
+        navigate("/forgetPassword")
+    }
+
 
     return (
         <Container className="login-container">
@@ -110,7 +114,7 @@ const LoginPage = () => {
                         </Button>
                     </Form>
                     <div className="text-center mt-3">
-                        <a href="#">Forgot Password?</a>
+                        <a onClick={handleForgetButton}>Forgot Password?</a>
                     </div>
                 </Col>
             </Row>

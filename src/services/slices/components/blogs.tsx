@@ -2,6 +2,26 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import http from '../../http/baseUrl'
 import { startLoadingActivity, stopLoadingActivity } from "../acitivity/activitySlice";
 
+export const createPosts = createAsyncThunk(
+    '/createPosts',
+    async (data: any, { dispatch }) => {
+        dispatch(startLoadingActivity())
+        try {
+            const response = await http.post('/post/createPost', data, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            })
+
+            if (response.status === 200) {
+                return response.data
+            }
+        } catch (error) {
+            console.error(error)
+            throw error;
+        }
+    }
+)
 
 export const getPosts = createAsyncThunk(
     '/getPosts',
@@ -34,6 +54,16 @@ export const postSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
+            .addCase(createPosts.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(createPosts.fulfilled, (state, action) => {
+                state.loading = false;
+                state.posts = action.payload;
+            })
+            .addCase(createPosts.rejected, (state) => {
+                state.loading = false;
+            })
             .addCase(getPosts.pending, (state) => {
                 state.loading = true;
             })

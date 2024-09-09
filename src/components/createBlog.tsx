@@ -1,36 +1,54 @@
 // CreateBlogPage.js
 import React, { useState } from 'react';
 import { Container, Form, Button, Row, Col, Alert } from 'react-bootstrap';
+import { createPosts } from '../services/slices/components/blogs';
+import { useDispatch } from 'react-redux';
+import toast from 'react-hot-toast';
+import * as yup from "yup"
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useNavigate } from 'react-router-dom';
+
 
 const CreateBlogPage = () => {
-    const [title, setTitle] = useState('');
-    const [content, setContent] = useState('');
+    const dispatch: any = useDispatch()
+    const navigate = useNavigate()
+    const [title, setTitle] = useState("");
+    const [content, setContent] = useState("");
     const [image, setImage] = useState(null);
-    const [error, setError] = useState('');
-    const [successMessage, setSuccessMessage] = useState('');
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+    const {
+        handleSubmit,
+        formState: { errors }
+    } = useForm<FormData>({
+    });
 
-        if (!title || !content || !image) {
-            setError('Please fill in all fields and upload an image.');
-            return;
+    const onSubmit = async (e: any, data: any) => {
+
+        const blogData = {
+            title: title,
+            content: content,
+            image: image,
         }
 
-        // You can handle the form submission here (e.g., sending data to an API)
-        // Example: Submit the blog data to the backend
-        const blogData = {
-            title,
-            content,
-            image,
-        };
+        try {
+            await dispatch(createPosts(blogData)).
+                unwrap().
+                then((res: any) => {
+                    if (res.success) {
+                        toast.success("Post Created Succesfully");
+                        navigate('/home')
+                    } else {
+                        toast.error("Failed to create Post")
+                    }
+                })
+        } catch (error) {
+            console.error(error)
+        }
+    };
 
-        // Reset form and show success message
-        setTitle('');
-        setContent('');
-        setImage(null);
-        setError('');
-        setSuccessMessage('Blog created successfully!');
+    const handleImageChange = (e: any) => {
+        setImage(e.target.files[0]);
     };
 
     return (
@@ -43,7 +61,7 @@ const CreateBlogPage = () => {
 
             <Row className="justify-content-center">
                 <Col md={8}>
-                    <Form onSubmit={handleSubmit}>
+                    <Form onSubmit={handleSubmit(onSubmit)}>
                         {/* Blog Title */}
                         <Form.Group controlId="formTitle" className="mb-3">
                             <Form.Label>Blog Title</Form.Label>
@@ -72,15 +90,10 @@ const CreateBlogPage = () => {
                             <Form.Label>Upload Blog Image</Form.Label>
                             <Form.Control
                                 type="file"
-                            // onChange={(e) => setImage(e.target.files[0])}
+                                onChange={handleImageChange}
+                                accept="image/*"
                             />
                         </Form.Group>
-
-                        {/* Error Message */}
-                        {error && <Alert variant="danger">{error}</Alert>}
-
-                        {/* Success Message */}
-                        {successMessage && <Alert variant="success">{successMessage}</Alert>}
 
                         {/* Submit Button */}
                         <Button variant="primary" type="submit">
