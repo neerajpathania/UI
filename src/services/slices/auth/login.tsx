@@ -14,7 +14,9 @@ export const userLogin = createAsyncThunk(
                 },
             });
             const token = response.data.token;
+            const userId = response.data._id
             localStorage.setItem("authToken", token)
+            localStorage.setItem("userId", userId)
             if (response.status === 200) {
                 return response.data;
 
@@ -54,7 +56,6 @@ export const forgetPassword = createAsyncThunk(
 export const resetPassword = createAsyncThunk(
     "auth/resetPassword",
     async (data: any, { dispatch }) => {
-        console.log(data)
 
         dispatch(startLoadingActivity());
         try {
@@ -67,6 +68,25 @@ export const resetPassword = createAsyncThunk(
                 return response.data;
             } else {
                 throw Error;
+            }
+        } catch (error) {
+            console.log("API Error", error);
+            throw error;
+        } finally {
+            dispatch(stopLoadingActivity())
+        }
+    }
+)
+
+export const profileData = createAsyncThunk(
+    "auth/profileData",
+    async (data: any, { dispatch }) => {
+        dispatch(startLoadingActivity());
+        try {
+            const response = await http.post(`/user/getProfileData`, data, {
+            });
+            if (response.status === 200) {
+                return response.data;
             }
         } catch (error) {
             console.log("API Error", error);
@@ -121,6 +141,16 @@ export const signInSlice = createSlice({
                 state.loading = false;
             })
             .addCase(resetPassword.rejected, (state) => {
+                state.loading = false;
+            })
+            .addCase(profileData.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(profileData.fulfilled, (state, action) => {
+                state.data = action.payload?.data;
+                state.loading = false;
+            })
+            .addCase(profileData.rejected, (state) => {
                 state.loading = false;
             })
     },

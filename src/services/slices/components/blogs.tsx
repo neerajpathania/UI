@@ -38,6 +38,24 @@ export const getPosts = createAsyncThunk(
     }
 )
 
+export const deletePost = createAsyncThunk(
+    '/deletePost',
+    async (data: any, { dispatch }) => {
+        dispatch(startLoadingActivity())
+        try {
+            const response = await http.delete(`/post/deletePost?blogId=${data.blogId}&userId=${data.userId}`, {
+            })
+
+            if (response.status === 200) {
+                return response.data
+            }
+        } catch (error) {
+            console.error(error)
+            throw error;
+        }
+    }
+)
+
 export interface Post {
     loading: boolean;
     posts: any[];
@@ -73,6 +91,17 @@ export const postSlice = createSlice({
 
             })
             .addCase(getPosts.rejected, (state) => {
+                state.loading = false;
+            })
+            .addCase(deletePost.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(deletePost.fulfilled, (state, action) => {
+                state.loading = false;
+                state.posts = action.payload || [];
+
+            })
+            .addCase(deletePost.rejected, (state) => {
                 state.loading = false;
             })
     }

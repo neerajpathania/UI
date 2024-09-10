@@ -9,6 +9,7 @@ import CreateBlogPage from "./components/createBlog";
 import { Toaster } from "react-hot-toast";
 import ForgetPassword from "./components/SignUp/forgetPassoword";
 import ResetPassword from "./components/SignUp/resetPassword";
+import ProfilePage from "./components/SignUp/Profile/profile";
 
 
 
@@ -31,6 +32,7 @@ const App = () => {
           <Route path="/create" element={<CreateBlogPage />} />
           <Route path="/forgetPassword" element={<ForgetPassword />} />
           <Route path="/resetPassword/:token" element={<ResetPassword />} />
+          <Route path="/profile" element={<ProfilePage />} />
         </Routes>
       </BrowserRouter >
     </Suspense>

@@ -16,6 +16,7 @@ const CreateBlogPage = () => {
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     const [image, setImage] = useState(null);
+    const userId = localStorage.getItem("userId")
 
     const {
         handleSubmit,
@@ -29,6 +30,7 @@ const CreateBlogPage = () => {
             title: title,
             content: content,
             image: image,
+            userId: userId
         }
 
         try {

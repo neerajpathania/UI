@@ -4,7 +4,7 @@ import { Navbar, Nav, Container, Row, Col, Card, Button } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux';
 import { LinkContainer } from 'react-router-bootstrap';
 import { getPosts } from '../services/slices/components/blogs';
-const baseUrl = 'http://localhost:5000/uploads/';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
     const data: any = useSelector((state: any) => state.Post?.posts) || []
@@ -33,7 +33,7 @@ const Home = () => {
                         <Nav className="me-auto">
                             <Nav.Link>Home</Nav.Link>
                             <LinkContainer to='/create'><Nav.Link>Create</Nav.Link></LinkContainer>
-                            <Nav.Link>Settings</Nav.Link>
+                            <LinkContainer to='/profile'><Nav.Link>Profile</Nav.Link></LinkContainer>
                         </Nav>
                     </Navbar.Collapse>
                 </Container>
@@ -47,25 +47,31 @@ const Home = () => {
                     </Col>
                 </Row>
                 <Row>
-                    {data.map((item: any, index: any) => {
-                        const isExpanded = expandedIndex === index;
-                        return (
-                            <Col key={index} md={4} className="mb-4">
-                                <Card>
-                                    <Card.Img variant="top" src={item?.image} alt="Blog Image" />
-                                    <Card.Body>
-                                        <Card.Title>{item.title}</Card.Title>
-                                        <Card.Text className={isExpanded ? 'expanded' : 'collapsed'}>
-                                            {item.content}
-                                        </Card.Text>
-                                        <Button variant="primary" onClick={() => handleReadMore(index)}>{isExpanded ? 'Read Less' : 'Read More'}</Button>
-                                    </Card.Body>
-                                </Card>
-                            </Col>
-                        )
-
-                    })}
+                    {data.length > 0 ? (
+                        data.map((item: any, index: any) => {
+                            const isExpanded = expandedIndex === index;
+                            return (
+                                <Col key={index} md={4} className="mb-4">
+                                    <Card>
+                                        <Card.Img variant="top" src={item?.image} alt="Blog Image" />
+                                        <Card.Body>
+                                            <Card.Title>{item.title}</Card.Title>
+                                            <Card.Text className={isExpanded ? 'expanded' : 'collapsed'}>
+                                                {item.content}
+                                            </Card.Text>
+                                            <Button variant="primary" onClick={() => handleReadMore(index)}>
+                                                {isExpanded ? 'Read Less' : 'Read More'}
+                                            </Button>
+                                        </Card.Body>
+                                    </Card>
+                                </Col>
+                            );
+                        })
+                    ) : (
+                        <p>No blogs available.</p>
+                    )}
                 </Row>
+
             </Container>
 
             {/* Footer */}
