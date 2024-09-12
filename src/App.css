@@ -9,3 +9,10 @@
 .expanded {
     display: block;
 }
+
+.hero {
+    background-image: url("C:\Blog(UI)\src\assets\Images\depositphotos_84219350-stock-photo-word-blog-suspended-by-ropes.jpg");
+    background-position: center;
+    padding: 100px 0;
+    text-align: center
+}

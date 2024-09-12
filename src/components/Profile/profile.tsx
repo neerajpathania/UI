@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Card, Button, Navbar, Nav } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { LinkContainer } from 'react-router-bootstrap';
-import { profileData } from '../../../services/slices/auth/login';
-import { deletePost } from '../../../services/slices/components/blogs';
+import { profileData } from '../../services/slices/auth/login';
+import { deletePost } from '../../services/slices/components/blogs';
+import toast from 'react-hot-toast';
 
 const ProfilePage = () => {
     const dispatch: any = useDispatch()
@@ -31,7 +32,9 @@ const ProfilePage = () => {
         dispatch(deletePost({ blogId, userId }))
             .unwrap()
             .then(() => {
-                console.log('Post deleted successfully');
+                dispatch(profileData({ userId }))
+                    .unwrap()
+                toast.success('Post deleted successfully');
                 // Optionally, you can refresh the posts after deletion
                 // dispatch(profileData({ userId }));
             })
@@ -56,9 +59,8 @@ const ProfilePage = () => {
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="me-auto">
-                            <Nav.Link>Profile</Nav.Link>
-                            <LinkContainer to="/settings"><Nav.Link>Settings</Nav.Link></LinkContainer>
-                            <Nav.Link>Home</Nav.Link>
+                            <LinkContainer to='/'><Nav.Link>Home</Nav.Link></LinkContainer>
+                            <LinkContainer to='/create'><Nav.Link>Create</Nav.Link></LinkContainer>
                         </Nav>
                     </Navbar.Collapse>
                 </Container>

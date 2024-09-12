@@ -38,6 +38,21 @@ export const getPosts = createAsyncThunk(
     }
 )
 
+export const getPostsByCategory = createAsyncThunk(
+    '/getPostsByCategory',
+    async (data: any, { dispatch }) => {
+        console.log("data", data)
+        try {
+            const response = await http.get(`post/getPostsByCategory?category=${data.category}`)
+            if (response.status === 200) {
+                return response.data
+            }
+        } catch (error: any) {
+            console.error("Error", error);
+        }
+    }
+)
+
 export const deletePost = createAsyncThunk(
     '/deletePost',
     async (data: any, { dispatch }) => {
@@ -91,6 +106,17 @@ export const postSlice = createSlice({
 
             })
             .addCase(getPosts.rejected, (state) => {
+                state.loading = false;
+            })
+            .addCase(getPostsByCategory.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(getPostsByCategory.fulfilled, (state, action) => {
+                state.loading = false;
+                state.posts = action.payload || [];
+
+            })
+            .addCase(getPostsByCategory.rejected, (state) => {
                 state.loading = false;
             })
             .addCase(deletePost.pending, (state) => {

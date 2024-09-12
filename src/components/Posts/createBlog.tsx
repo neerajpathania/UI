@@ -1,7 +1,7 @@
 // CreateBlogPage.js
 import React, { useState } from 'react';
 import { Container, Form, Button, Row, Col, Alert } from 'react-bootstrap';
-import { createPosts } from '../services/slices/components/blogs';
+import { createPosts } from '../../services/slices/components/blogs';
 import { useDispatch } from 'react-redux';
 import toast from 'react-hot-toast';
 import * as yup from "yup"
@@ -16,6 +16,32 @@ const CreateBlogPage = () => {
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     const [image, setImage] = useState(null);
+    const [category, setCategory] = useState("");
+    const [error, setError] = useState({
+        title: '',
+        content: '',
+        category: ''
+    })
+
+    const validateForm = () => {
+        const newError = { title: '', content: '', category: '' };
+        let isValid = true;
+
+        if (!title.trim()) {
+            newError.title = 'Title is required';
+            isValid = false;
+        }
+        if (!content.trim()) {
+            newError.title = 'Content is required';
+            isValid = false;
+        }
+        if (!category.trim()) {
+            newError.category = 'Category is required';
+            isValid = false;
+        }
+        setError(newError);
+        return isValid;
+    }
     const userId = localStorage.getItem("userId")
 
     const {
@@ -25,28 +51,31 @@ const CreateBlogPage = () => {
     });
 
     const onSubmit = async (e: any, data: any) => {
+        if (validateForm()) {
+            const blogData = {
+                title: title,
+                content: content,
+                image: image,
+                category: category,
+                userId: userId
+            }
 
-        const blogData = {
-            title: title,
-            content: content,
-            image: image,
-            userId: userId
+            try {
+                await dispatch(createPosts(blogData)).
+                    unwrap().
+                    then((res: any) => {
+                        if (res.success) {
+                            toast.success("Post Created Succesfully");
+                            navigate('/home')
+                        } else {
+                            toast.error("Failed to create Post")
+                        }
+                    })
+            } catch (error) {
+                console.error(error)
+            }
         }
 
-        try {
-            await dispatch(createPosts(blogData)).
-                unwrap().
-                then((res: any) => {
-                    if (res.success) {
-                        toast.success("Post Created Succesfully");
-                        navigate('/home')
-                    } else {
-                        toast.error("Failed to create Post")
-                    }
-                })
-        } catch (error) {
-            console.error(error)
-        }
     };
 
     const handleImageChange = (e: any) => {
@@ -73,6 +102,11 @@ const CreateBlogPage = () => {
                                 value={title}
                                 onChange={(e) => setTitle(e.target.value)}
                             />
+                            {error.title && (
+                                <Alert variant="danger" className="mt-2">
+                                    {error.title}
+                                </Alert>
+                            )}
                         </Form.Group>
 
                         {/* Blog Content */}
@@ -85,6 +119,11 @@ const CreateBlogPage = () => {
                                 value={content}
                                 onChange={(e) => setContent(e.target.value)}
                             />
+                            {error.content && (
+                                <Alert variant="danger" className="mt-2">
+                                    {error.content}
+                                </Alert>
+                            )}
                         </Form.Group>
 
                         {/* Blog Image */}
@@ -96,6 +135,23 @@ const CreateBlogPage = () => {
                                 accept="image/*"
                             />
                         </Form.Group>
+
+                        {/* {Select Category} */}
+                        <Form.Label>Select Your Category</Form.Label>
+                        <Form.Select aria-label="Default select example" className="mb-3" value={category} onChange={(e) => setCategory(e.target.value)}>
+                            <option>Open this select menu</option>
+                            <option value="Technology">Technology</option>
+                            <option value="Sports">Sports</option>
+                            <option value="Politics">Politics</option>
+                            <option value="Travel">Travel</option>
+                            <option value="Lifestyle">Lifestyle</option>
+                            <option value="All">Other</option>
+                            {error.category && (
+                                <Alert variant="danger" className="mt-2">
+                                    {error.category}
+                                </Alert>
+                            )}
+                        </Form.Select>
 
                         {/* Submit Button */}
                         <Button variant="primary" type="submit">
