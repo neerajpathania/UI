@@ -7,6 +7,8 @@ import { userSignUp } from "../../services/slices/auth/signUp";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
 const schema = yup.object().shape({
     email: yup
@@ -46,7 +48,7 @@ const SignUp = () => {
     const navigate = useNavigate();
     const dispatch: any = useDispatch()
 
-    const [formData, setFormData] = useState<any>(defaultValues);
+    const [password, setPassword] = useState(false);
 
     const schemas = () => {
         return yupResolver(schema)
@@ -113,9 +115,19 @@ const SignUp = () => {
                                     )}
                                 </Form.Group>
 
-                                <Form.Group controlId="formPassword" className="mt-3">
+                                <Form.Group controlId="formPassword" className="mt-3 position-relative">
                                     <Form.Label>Password</Form.Label>
-                                    <Form.Control type="password" placeholder="Password" {...register('password')} required />
+                                    <Form.Control type={password ? "text" : "password"} placeholder="Password" {...register('password')} required />
+                                    <span
+                                        className=" position-absolute end-0 translate-middle-y me-2 adjust"
+                                        onClick={() => setPassword(!password)}
+                                    >
+                                        {password ? (
+                                            <VisibilityIcon />
+                                        ) : (
+                                            <VisibilityOffIcon />
+                                        )}
+                                    </span>
                                     {errors.email && (
                                         <p className="text-red-500 text-sm mt-2">
                                             {errors?.password?.message}

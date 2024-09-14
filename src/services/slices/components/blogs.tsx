@@ -71,6 +71,25 @@ export const deletePost = createAsyncThunk(
     }
 )
 
+export const editPost = createAsyncThunk(
+    '/editPost',
+    async (data: any, { dispatch }) => {
+        console.log(data)
+        dispatch(startLoadingActivity())
+        try {
+            const response = await http.put(`/post/editPost?blogId=${data.blogId}`, data, {
+            })
+
+            if (response.status === 200) {
+                return response.data
+            }
+        } catch (error) {
+            console.error(error)
+            throw error;
+        }
+    }
+)
+
 export interface Post {
     loading: boolean;
     posts: any[];
@@ -78,7 +97,7 @@ export interface Post {
 
 const initialState: Post = {
     loading: false,
-    posts: []
+    posts: [],
 }
 
 export const postSlice = createSlice({
@@ -128,6 +147,18 @@ export const postSlice = createSlice({
 
             })
             .addCase(deletePost.rejected, (state) => {
+                state.loading = false;
+            })
+
+            .addCase(editPost.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(editPost.fulfilled, (state, action) => {
+                state.loading = false;
+                state.posts = action.payload || [];
+
+            })
+            .addCase(editPost.rejected, (state) => {
                 state.loading = false;
             })
     }

@@ -1,19 +1,27 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Row, Col, Card, Button, Navbar, Nav } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Navbar, Nav, Modal, Form } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { LinkContainer } from 'react-router-bootstrap';
 import { profileData } from '../../services/slices/auth/login';
-import { deletePost } from '../../services/slices/components/blogs';
+import { deletePost, editPost } from '../../services/slices/components/blogs';
 import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import BlogReachChart from '../charts/growthChart';
 
 const ProfilePage = () => {
     const dispatch: any = useDispatch()
-    const userData = useSelector((state: any) => state.data?.data) || []
+    const navigate = useNavigate()
     const userId = localStorage.getItem("userId")
     const [name, setName] = useState("")
     const [email, setEmail] = useState("")
     const [posts, setPosts] = useState<any>([])
     const [blogId, setBlogId] = useState("")
+    const [show, setShow] = useState(false)
+    const [editTitle, setEditTitle] = useState("")
+    const [editContent, setEditContent] = useState("")
+    const [editCategory, setEditCategory] = useState("")
+
 
 
     useEffect(() => {
@@ -50,6 +58,53 @@ const ProfilePage = () => {
         setExpandedIndex(index === expandedIndex ? null : index);
     };
 
+    const handlelogout = () => {
+        localStorage.removeItem("authToken")
+        navigate("/login")
+    }
+
+    const handleOpen = (post: any) => {
+        setEditTitle(post?.title)
+        setEditContent(post?.content)
+        setEditCategory(post?.category)
+        setBlogId(post._id);
+        setShow(true)
+    }
+    const handleClose = () => {
+        setShow(false)
+    }
+
+    const {
+        handleSubmit,
+        formState: { errors }
+    } = useForm<FormData>({
+    });
+
+    const onsubmit = async () => {
+        const blogData = {
+            blogId,
+            userId,
+            title: editTitle,
+            content: editContent,
+            category: editCategory
+        }
+
+        try {
+            await dispatch(editPost(blogData)).
+                unwrap().
+                then((res: any) => {
+                    if (res.success) {
+                        toast.success("Post Updated Succesfully");
+                        navigate('/home')
+                    } else {
+                        toast.error("Failed to create Post")
+                    }
+                })
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
     return (
         <div>
             {/* Navbar */}
@@ -68,8 +123,8 @@ const ProfilePage = () => {
 
             {/* Profile Section */}
             <Container className="mt-5">
-                <Row>
-                    <Col md={4}>
+                <Row className={"head"}>
+                    <Col md={4} className='mt-5'>
                         <Card className="shadow-sm p-3 mb-5 bg-white rounded">
                             {/* <Card.Img variant="top" src={user.profileImage} /> */}
                             <Card.Body className="text-center">
@@ -78,11 +133,16 @@ const ProfilePage = () => {
                                 <LinkContainer to="/settings">
                                     <Button variant="outline-primary">Settings</Button>
                                 </LinkContainer>
+                                <Button variant="outline-success" className='ms-3' onClick={handlelogout}>Logout</Button>
                             </Card.Body>
                         </Card>
                     </Col>
-
-                    <Col md={8}>
+                    <Col md={6}>
+                        <BlogReachChart />
+                    </Col>
+                </Row>
+                <Row>
+                    <Col md={12}>
                         <h3 className="mb-4 text-center">My Posts</h3>
                         <Row>
                             {posts.length > 0 ? (
@@ -100,7 +160,7 @@ const ProfilePage = () => {
                                                     <Button variant="primary" onClick={() => handleReadMore(index)}>
                                                         {isExpanded ? 'Read Less' : 'Read More'}
                                                     </Button>
-                                                    <Button variant="success" className='ms-3 px-4'>Edit</Button>
+                                                    <Button variant="success" className='ms-3 px-4' onClick={() => handleOpen(post)}>Edit</Button>
                                                     <Button variant="danger" className='ms-3' onClick={() => handleDelete(post._id)}>Delete</Button>
                                                 </Card.Body>
                                             </Card>
@@ -114,7 +174,84 @@ const ProfilePage = () => {
                     </Col>
                 </Row>
             </Container>
-        </div>
+            <Modal show={show} onHide={handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Select Options</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form onSubmit={handleSubmit(onsubmit)}>
+                        <Form.Group controlId="formTitle" className="mb-3">
+                            <Form.Label>Blog Title</Form.Label>
+                            <Form.Control
+                                type="text"
+                                placeholder="Enter blog title"
+                                value={editTitle}
+                                onChange={(e) => setEditTitle(e.target.value)}
+                            />
+                            {/* {error.title && (
+                                <Alert variant="danger" className="mt-2">
+                                    {error.title}
+                                </Alert>
+                            )} */}
+                        </Form.Group>
+
+                        {/* Blog Content */}
+                        <Form.Group controlId="formContent" className="mb-3">
+                            <Form.Label>Blog Content</Form.Label>
+                            <Form.Control
+                                as="textarea"
+                                rows={5}
+                                placeholder="Write your blog content here"
+                                value={editContent}
+                                onChange={(e) => setEditContent(e.target.value)}
+                            />
+                            {/* {error.content && (
+                                <Alert variant="danger" className="mt-2">
+                                    {error.content}
+                                </Alert>
+                            )} */}
+                        </Form.Group>
+
+                        {/* Blog Image */}
+                        <Form.Group controlId="formFile" className="mb-3" >
+                            <Form.Label>Upload Blog Image</Form.Label>
+                            <Form.Control
+                                type="file"
+                                accept="image/*"
+                            />
+                        </Form.Group>
+
+                        {/* {Select Category} */}
+                        <Form.Label>Select Your Category</Form.Label>
+                        <Form.Select aria-label="Default select example" className="mb-3" value={editCategory} onChange={(e) => setEditCategory(e.target.value)}>
+                            <option>Open this select menu</option>
+                            <option value="Technology">Technology</option>
+                            <option value="Sports">Sports</option>
+                            <option value="Politics">Politics</option>
+                            <option value="Travel">Travel</option>
+                            <option value="Lifestyle">Lifestyle</option>
+                            <option value="All">Other</option>
+                            {/* {error.category && (
+                                <Alert variant="danger" className="mt-2">
+                                    {error.category}
+                                </Alert>
+                            )} */}
+                        </Form.Select>
+
+
+                        <Modal.Footer>
+                            <Button variant="secondary" onClick={handleClose}>
+                                Discard
+                            </Button>
+                            <Button variant="primary" type='submit'>
+                                Save
+                            </Button>
+                        </Modal.Footer>
+
+                    </Form>
+                </Modal.Body>
+            </Modal>
+        </div >
     );
 };
 

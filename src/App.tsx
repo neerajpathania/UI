@@ -11,6 +11,7 @@ import ForgetPassword from "./components/SignUp/forgetPassoword";
 import ResetPassword from "./components/SignUp/resetPassword";
 import ProfilePage from "./components/Profile/profile";
 import Explore from "./components/Posts/Explore";
+import SettingsPage from "./components/Profile/setting";
 
 
 
@@ -35,6 +36,7 @@ const App = () => {
           <Route path="/resetPassword/:token" element={<ResetPassword />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/posts" element={<Explore />} />
+          <Route path="/settings" element={<SettingsPage />} />
         </Routes>
       </BrowserRouter >
     </Suspense>

@@ -7,6 +7,8 @@ import * as yup from "yup";
 import { userLogin } from '../../services/slices/auth/login';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
 const schema = yup.object().shape({
     email: yup
@@ -39,6 +41,8 @@ const defaultValues = {
 const LoginPage = () => {
     const dispatch: any = useDispatch()
     const navigate = useNavigate()
+
+    const [password, setPassword] = useState(false);
 
     const schemas = () => {
         return yupResolver(schema)
@@ -98,13 +102,23 @@ const LoginPage = () => {
                                 <p className="text-red-500 text-sm mt-2">{errors?.email?.message}</p>
                             )}
                         </Form.Group>
-                        <Form.Group controlId="formPassword" className="mt-3">
+                        <Form.Group controlId="formPassword" className="mt-3 position-relative">
                             <Form.Label>Password</Form.Label>
                             <Form.Control
-                                type="password"
+                                type={password ? "text" : "password"}
                                 placeholder="Password"
                                 {...register('password')}
                             />
+                            <span
+                                className=" position-absolute end-0 translate-middle-y me-2 adjust"
+                                onClick={() => setPassword(!password)}
+                            >
+                                {password ? (
+                                    <VisibilityIcon />
+                                ) : (
+                                    <VisibilityOffIcon />
+                                )}
+                            </span>
                             {errors.password && (
                                 <p className="text-red-500 text-sm mt-2">{errors?.password?.message}</p>
                             )}

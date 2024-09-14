@@ -4,10 +4,12 @@ import { Container, Form, Button, Row, Col, Alert } from 'react-bootstrap';
 import { createPosts } from '../../services/slices/components/blogs';
 import { useDispatch } from 'react-redux';
 import toast from 'react-hot-toast';
-import * as yup from "yup"
 import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigate } from 'react-router-dom';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import HomeIcon from '@mui/icons-material/Home';
+
 
 
 const CreateBlogPage = () => {
@@ -15,8 +17,10 @@ const CreateBlogPage = () => {
     const navigate = useNavigate()
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
-    const [image, setImage] = useState(null);
+    const [image, setImage] = useState<File | null>(null);
     const [category, setCategory] = useState("");
+    const [publishTime, setPublishTime] = useState<any>(null)
+    const [publishOption, setPublishOption] = useState("No")
     const [error, setError] = useState({
         title: '',
         content: '',
@@ -51,12 +55,14 @@ const CreateBlogPage = () => {
     });
 
     const onSubmit = async (e: any, data: any) => {
+        const formattedPublishTime = publishOption === "Yes" && publishTime ? publishTime.toISOString() : null;
         if (validateForm()) {
             const blogData = {
                 title: title,
                 content: content,
                 image: image,
                 category: category,
+                publishTime: formattedPublishTime,
                 userId: userId
             }
 
@@ -82,85 +88,141 @@ const CreateBlogPage = () => {
         setImage(e.target.files[0]);
     };
 
+    const handleClick = () => {
+        navigate("/home")
+    }
+
     return (
-        <Container className="mt-4">
-            <Row>
-                <Col>
-                    <h1 className="text-center mb-4">Create a New Blog</h1>
-                </Col>
-            </Row>
+        <section className='blogSection'>
+            <Container>
+                <Row>
+                    <Col md={2} className="mt-2">
+                        <button
+                            className=" border-lightgray3 text-gray-dark border rounded-4 px-3 py-2 blogSection"
+                            onClick={handleClick}
+                        >
+                            <span className="rotate-180 inline-block text-gray-dark mob-font">
+                                <HomeIcon />
+                            </span>{" "}
+                            Back to Home
+                        </button>
+                    </Col>
+                    <Col>
+                        <h1 className="text-center mb-4">Create a New Blog</h1>
+                    </Col>
+                </Row>
 
-            <Row className="justify-content-center">
-                <Col md={8}>
-                    <Form onSubmit={handleSubmit(onSubmit)}>
-                        {/* Blog Title */}
-                        <Form.Group controlId="formTitle" className="mb-3">
-                            <Form.Label>Blog Title</Form.Label>
-                            <Form.Control
-                                type="text"
-                                placeholder="Enter blog title"
-                                value={title}
-                                onChange={(e) => setTitle(e.target.value)}
-                            />
-                            {error.title && (
-                                <Alert variant="danger" className="mt-2">
-                                    {error.title}
-                                </Alert>
-                            )}
-                        </Form.Group>
+                <Row className="justify-content-center create">
+                    <Col md={8}>
+                        <Form onSubmit={handleSubmit(onSubmit)}>
+                            {/* Blog Title */}
+                            <Form.Group controlId="formTitle" className="mb-3">
+                                <Form.Label>Blog Title</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    placeholder="Enter blog title"
+                                    value={title}
+                                    onChange={(e) => setTitle(e.target.value)}
+                                    className='oneLineInput'
+                                />
+                                {error.title && (
+                                    <p className="mt-2 text-danger">
+                                        {error.title}
+                                    </p>
+                                )}
+                            </Form.Group>
 
-                        {/* Blog Content */}
-                        <Form.Group controlId="formContent" className="mb-3">
-                            <Form.Label>Blog Content</Form.Label>
-                            <Form.Control
-                                as="textarea"
-                                rows={5}
-                                placeholder="Write your blog content here"
-                                value={content}
-                                onChange={(e) => setContent(e.target.value)}
-                            />
-                            {error.content && (
-                                <Alert variant="danger" className="mt-2">
-                                    {error.content}
-                                </Alert>
-                            )}
-                        </Form.Group>
+                            {/* Blog Content */}
+                            <Form.Group controlId="formContent" className="mb-3">
+                                <Form.Label>Blog Content</Form.Label>
+                                <Form.Control
+                                    as="textarea"
+                                    rows={5}
+                                    placeholder="Write your blog content here"
+                                    value={content}
+                                    onChange={(e) => setContent(e.target.value)}
+                                    className='oneLineInput'
+                                />
+                                {error.content && (
+                                    <p className="mt-2 text-danger">
+                                        {error.content}
+                                    </p>
+                                )}
+                            </Form.Group>
 
-                        {/* Blog Image */}
-                        <Form.Group controlId="formFile" className="mb-3">
-                            <Form.Label>Upload Blog Image</Form.Label>
-                            <Form.Control
-                                type="file"
-                                onChange={handleImageChange}
-                                accept="image/*"
-                            />
-                        </Form.Group>
+                            {/* Blog Image */}
+                            <Form.Group controlId="formFile" className="mb-3    " >
+                                <Form.Label>Upload Blog Image</Form.Label>
+                                <div className="custom-file-wrapper">
+                                    <label className="custom-file-label" htmlFor="customFileInput">
+                                        {image ? image.name : "Choose file"}
+                                    </label>
+                                    <Form.Control
+                                        type="file"
+                                        id="customFileInput"
+                                        onChange={handleImageChange}
+                                        accept="image/*"
+                                        className="d-none"
+                                    />
+                                </div>
+                            </Form.Group>
 
-                        {/* {Select Category} */}
-                        <Form.Label>Select Your Category</Form.Label>
-                        <Form.Select aria-label="Default select example" className="mb-3" value={category} onChange={(e) => setCategory(e.target.value)}>
-                            <option>Open this select menu</option>
-                            <option value="Technology">Technology</option>
-                            <option value="Sports">Sports</option>
-                            <option value="Politics">Politics</option>
-                            <option value="Travel">Travel</option>
-                            <option value="Lifestyle">Lifestyle</option>
-                            <option value="All">Other</option>
-                            {error.category && (
-                                <Alert variant="danger" className="mt-2">
-                                    {error.category}
-                                </Alert>
-                            )}
-                        </Form.Select>
+                            {/* {Select Category} */}
+                            <Form.Label>Select Your Category</Form.Label>
+                            <Form.Select aria-label="Default select example" className="mb-3 oneLineInput" value={category} onChange={(e) => setCategory(e.target.value)}>
+                                <option className='oneLineInput'>Open this select menu</option>
+                                <option value="Technology">Technology</option>
+                                <option value="Sports">Sports</option>
+                                <option value="Politics">Politics</option>
+                                <option value="Travel">Travel</option>
+                                <option value="Lifestyle">Lifestyle</option>
+                                <option value="All">Other</option>
+                                {error.category && (
+                                    <p className="mt-2 text-danger">
+                                        {error.category}
+                                    </p>
+                                )}
+                            </Form.Select>
 
-                        {/* Submit Button */}
-                        <Button variant="primary" type="submit">
-                            Create Blog
-                        </Button>
-                    </Form>
-                </Col>
-            </Row>
-        </Container>
+                            <Form.Group controlId="formPublishTime" className="mb-3">
+                                <Form.Label>Schedule This Post (optional)</Form.Label>
+                                <Form.Check
+                                    type="radio"
+                                    label="Yes"
+                                    name="publishOption"
+                                    value="Yes"
+                                    checked={publishOption === "Yes"}
+                                    onChange={(e) => setPublishOption(e.target.value)}
+                                />
+                                <Form.Check
+                                    type="radio"
+                                    label="No"
+                                    name="publishOption"
+                                    value="No"
+                                    checked={publishOption === "No"}
+                                    onChange={(e) => setPublishOption(e.target.value)}
+                                />
+                                {publishOption === "Yes" && (
+                                    <DatePicker
+                                        selected={publishTime}
+                                        onChange={(date) => setPublishTime(date)}
+                                        showTimeSelect
+                                        dateFormat="Pp"
+                                        className="form-control oneLineInput"
+                                    />
+                                )}
+
+                            </Form.Group>
+
+                            {/* Submit Button */}
+                            <button className="border-lightgray3 text-gray-dark border rounded-4 px-3 py-2 blogSection" type="submit">
+                                Create Blog
+                            </button>
+                        </Form>
+                    </Col>
+                </Row>
+            </Container>
+        </section >
     );
 };
 

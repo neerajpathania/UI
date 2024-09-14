@@ -97,6 +97,50 @@ export const profileData = createAsyncThunk(
     }
 )
 
+export const editProfile = createAsyncThunk(
+    "auth/editProfile",
+    async (data: any, { dispatch }) => {
+        dispatch(startLoadingActivity());
+        try {
+            const response = await http.put(`/user/editProfile`, data, {
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+            if (response.status === 200) {
+                return response.data;
+            }
+        } catch (error) {
+            console.log("API Error", error);
+            throw error;
+        } finally {
+            dispatch(stopLoadingActivity())
+        }
+    }
+)
+
+export const editPasswords = createAsyncThunk(
+    "auth/editPasswords",
+    async (data: any, { dispatch }) => {
+        dispatch(startLoadingActivity());
+        try {
+            const response = await http.put(`/user/editPassword`, data, {
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+            if (response.status === 200) {
+                return response.data;
+            }
+        } catch (error) {
+            console.log("API Error", error);
+            throw error;
+        } finally {
+            dispatch(stopLoadingActivity())
+        }
+    }
+)
+
 export interface SignIn {
     loading: boolean;
     data: []
@@ -151,6 +195,28 @@ export const signInSlice = createSlice({
                 state.loading = false;
             })
             .addCase(profileData.rejected, (state) => {
+                state.loading = false;
+            })
+
+            .addCase(editProfile.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(editProfile.fulfilled, (state, action) => {
+                state.data = action.payload?.data;
+                state.loading = false;
+            })
+            .addCase(editProfile.rejected, (state) => {
+                state.loading = false;
+            })
+
+            .addCase(editPasswords.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(editPasswords.fulfilled, (state, action) => {
+                state.data = action.payload?.data;
+                state.loading = false;
+            })
+            .addCase(editPasswords.rejected, (state) => {
                 state.loading = false;
             })
     },

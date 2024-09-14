@@ -7,7 +7,7 @@ import { getPosts } from '../services/slices/components/blogs';
 import { Link, useNavigate } from 'react-router-dom';
 
 const Home = () => {
-    const data: any = useSelector((state: any) => state.Post?.posts) || []
+    const data: any[] = useSelector((state: any) => state.Post?.posts) || []
     const dispatch: any = useDispatch()
     const navigate = useNavigate()
 
@@ -32,11 +32,15 @@ const Home = () => {
         navigate(`/posts?${queryParams}`)
     }
 
+
     useEffect(() => {
         dispatch(getPosts()).catch((error: any) =>
             console.error("Failed to fetch reports", error)
         )
     }, [dispatch])
+
+
+    const latestPosts = Array.isArray(data) ? data.slice().reverse().slice(0, 6) : [];
 
     return (
         <div>
@@ -62,6 +66,7 @@ const Home = () => {
             </div>
 
             {/* Recent Posts */}
+
             <Container className="mt-4">
                 <Row>
                     <Col>
@@ -69,8 +74,8 @@ const Home = () => {
                     </Col>
                 </Row>
                 <Row>
-                    {data.length > 0 ? (
-                        data.map((item: any, index: any) => {
+                    {latestPosts.length > 0 ? (
+                        latestPosts.map((item: any, index: any) => {
                             const isExpanded = expandedIndex === index;
                             return (
                                 <Col key={index} md={4} className="mb-4">

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Form, Button, Alert, Container, Row, Col } from "react-bootstrap";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup"
@@ -7,6 +7,8 @@ import { resetPassword } from "../../services/slices/auth/login";
 import toast from "react-hot-toast";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
 const schema = yup.object().shape({
     newPassword: yup
@@ -33,6 +35,7 @@ const ResetPassword = () => {
     const { token } = useParams();
     const dispatch: any = useDispatch()
     const navigate = useNavigate()
+    const [password, setPassword] = useState(false);
 
     const schemas = () => {
         return yupResolver(schema)
@@ -71,14 +74,24 @@ const ResetPassword = () => {
                 <Col md={6}>
                     <h2>Reset Password</h2>
                     <Form onSubmit={handleSubmit(onSubmit)}>
-                        <Form.Group controlId="formNewPassword">
+                        <Form.Group controlId="formNewPassword" className="position-relative">
                             <Form.Label>New Password</Form.Label>
                             <Form.Control
-                                type="password"
+                                type={password ? "text" : "password"}
                                 placeholder="Enter new password"
                                 {...register("newPassword")}
                                 required
                             />
+                            <span
+                                className=" position-absolute end-0 translate-middle-y me-2 adjust"
+                                onClick={() => setPassword(!password)}
+                            >
+                                {password ? (
+                                    <VisibilityIcon />
+                                ) : (
+                                    <VisibilityOffIcon />
+                                )}
+                            </span>
                         </Form.Group>
                         {/* <Form.Group controlId="formConfirmPassword">
                             <Form.Label>Confirm New Password</Form.Label>
