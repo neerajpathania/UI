@@ -23,7 +23,6 @@ const ProfilePage = () => {
     const [editCategory, setEditCategory] = useState("")
 
 
-
     useEffect(() => {
         dispatch(profileData({ userId }))
             .unwrap()

@@ -6,10 +6,10 @@ import { LinkContainer } from 'react-router-bootstrap';
 // import { getPosts } from '../services/slices/components/blogs';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { getPostsByCategory } from '../../services/slices/components/blogs';
+import Footer from '../../layout/footer';
 
 const Explore = () => {
     const data: any = useSelector((state: any) => state.Post?.posts) || []
-    console.log("data", data)
     const dispatch: any = useDispatch()
     const navigate = useNavigate()
 
@@ -60,7 +60,7 @@ const Explore = () => {
                         data?.filteredPost?.map((item: any, index: any) => {
                             const isExpanded = expandedIndex === index;
                             return (
-                                <Col key={index} md={4} className="mb-4">
+                                <Col key={index} md={12} className="mb-4">
                                     <Card>
                                         <Card.Img variant="top" src={item?.image} alt="Blog Image" />
                                         <Card.Body>
@@ -84,20 +84,7 @@ const Explore = () => {
             </Container>
 
             {/* Footer */}
-            <footer className="bg-dark text-white text-center py-4 mt-4">
-                <Container>
-                    <Row>
-                        <Col>
-                            <p className="mb-0">&copy; {new Date().getFullYear()} My Blog. All Rights Reserved.</p>
-                            <p>Follow us on:
-                                <a href="#facebook" className="text-white mx-2">Facebook</a> |
-                                <a href="#twitter" className="text-white mx-2">Twitter</a> |
-                                <a href="#instagram" className="text-white mx-2">Instagram</a>
-                            </p>
-                        </Col>
-                    </Row>
-                </Container>
-            </footer>
+            <Footer />
 
         </div >
     );

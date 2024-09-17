@@ -38,7 +38,7 @@ const defaultValues = {
 }
 
 
-const LoginPage = () => {
+const LoginModal = () => {
     const dispatch: any = useDispatch()
     const navigate = useNavigate()
 
@@ -46,6 +46,10 @@ const LoginPage = () => {
 
     const schemas = () => {
         return yupResolver(schema)
+    }
+
+    const handleSignup = () => {
+        navigate("/signup")
     }
 
     const {
@@ -68,7 +72,7 @@ const LoginPage = () => {
                 .then((res: any) => {
                     if (res.success) {
                         toast.success("Login successful")
-                        navigate('/');
+                        navigate('/home');
                     } else if (res.error) {
                         toast.error("Incorrect Email or password")
                     }
@@ -80,16 +84,15 @@ const LoginPage = () => {
         }
     }
 
-    const handleForgetButton = () => {
-        navigate("/forgetPassword")
-    }
+    // const handleForgetButton = () => {
+    //     navigate("/forgetPassword")
+    // }
 
 
     return (
         <Container className="login-container">
-            <Row className="justify-content-center align-items-center min-vh-100">
-                <Col md={4} className="p-4 shadow-lg rounded bg-white">
-                    <h3 className="text-center mb-4">Login</h3>
+            <Row>
+                <div>
                     <Form onSubmit={handleSubmit(onSubmit)}>
                         <Form.Group controlId="formEmail">
                             <Form.Label>Email address</Form.Label>
@@ -127,13 +130,20 @@ const LoginPage = () => {
                             Login
                         </Button>
                     </Form>
-                    <div className="text-center mt-3">
-                        <a onClick={handleForgetButton}>Forgot Password?</a>
+                    <div className="text-center mt-3 mb-3">
+                        {/* <a onClick={handleForgetButton}>Forgot Password?</a> */}
                     </div>
-                </Col>
+                    <h6 className='text-center' onClick={handleSignup}>Dont't Have an account? Signup</h6>
+                    <p className="fs-6 mb-3 text-center mt-3">Or</p>
+                    <button className="w-100 py-2 mb-2 btn btn-outline-secondary rounded-3" type="submit">
+                        <svg className="bi me-1" width="16" height="16"><use xlinkHref="#github"></use></svg>
+                        Sign in with Gogle
+                    </button>
+                </div>
+
             </Row>
         </Container>
     );
 };
 
-export default LoginPage;
+export default LoginModal;

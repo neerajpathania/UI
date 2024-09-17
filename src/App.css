@@ -11,16 +11,21 @@
 }
 
 .hero {
-    background-image: url("C:\Blog(UI)\src\assets\Images\depositphotos_84219350-stock-photo-word-blog-suspended-by-ropes.jpg");
+    background-image: url("C:\Blog(UI)\src\assets\Images\Author Logo Pen Writing.png");
     background-position: center;
-    padding: 100px 0;
+    background-repeat: no-repeat;
+    /* background-size: cover; */
+    padding: 13rem 0;
     text-align: center
 }
 
 .blogSection {
-    background-image: url("C:\Blog(UI)\src\assets\Images\pexels-ironic-695657 (1).jpg");
+    background-image: url("C:\Blog(UI)\src\assets\Images\depositphotos_84219350-stock-photo-word-blog-suspended-by-ropes.jpg");
     background-blend-mode: overlay;
-    background-color: rgb(162, 157, 157);
+    background-color: rgb(239, 244, 249);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
 }
 
 .create {
@@ -83,4 +88,28 @@
     background-image: url("C:\Blog(UI)\src\assets\Images\pexels-ironic-695657 (1).jpg");
     background-blend-mode: overlay;
     background-color: rgb(162, 157, 157);
+}
+
+.ReadButto:hover {
+    background-color: transparent;
+}
+
+.shadow {
+    box-shadow: var(--bs-box-shadow) !important;
+}
+
+footer {
+    background-color: #343a40;
+    color: #fff;
+    line-height: 2;
+}
+
+footer a {
+    color: #ddd;
+    text-decoration: none;
+}
+
+footer a:hover {
+    color: #fff;
+    text-decoration: underline;
 }

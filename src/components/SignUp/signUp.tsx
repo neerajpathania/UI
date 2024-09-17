@@ -59,7 +59,7 @@ const SignUp = () => {
         handleSubmit,
         formState: { errors }
     } = useForm<FormData>({
-        resolver: yupResolver(schema),
+        resolver: schemas(),
         defaultValues,
     });
 
@@ -89,9 +89,9 @@ const SignUp = () => {
 
     return (
         <>
-            <Container className="d-flex justify-content-center align-items-center min-vh-100">
-                <Row className="w-100">
-                    <Col md={6} lg={4}>
+            <Container>
+                <Row className="w-100 d-flex justify-content-center mt-5 align-items-center">
+                    <Col md={8} lg={5}>
                         <div className="border p-4 rounded bg-light shadow-sm">
                             <h2 className="text-center mb-4">Sign Up</h2>
                             <Form onSubmit={handleSubmit(onSubmit)}>
@@ -128,10 +128,8 @@ const SignUp = () => {
                                             <VisibilityOffIcon />
                                         )}
                                     </span>
-                                    {errors.email && (
-                                        <p className="text-red-500 text-sm mt-2">
-                                            {errors?.password?.message}
-                                        </p>
+                                    {errors.password && (
+                                        <p className="text-red-500 text-sm mt-2">{errors?.password?.message}</p>
                                     )}
                                 </Form.Group>
 
@@ -153,3 +151,5 @@ const SignUp = () => {
 }
 
 export default SignUp
+
+// bS4TclUT8GXvkuTY

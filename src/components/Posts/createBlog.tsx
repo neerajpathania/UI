@@ -89,7 +89,7 @@ const CreateBlogPage = () => {
     };
 
     const handleClick = () => {
-        navigate("/home")
+        navigate("/")
     }
 
     return (
@@ -108,7 +108,7 @@ const CreateBlogPage = () => {
                         </button>
                     </Col>
                     <Col>
-                        <h1 className="text-center mb-4">Create a New Blog</h1>
+                        {/* <h1 className="text-center mb-4">Think & Write</h1> */}
                     </Col>
                 </Row>
 

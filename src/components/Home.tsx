@@ -4,23 +4,31 @@ import { Navbar, Nav, Container, Row, Col, Card, Button, Modal, Form } from 'rea
 import { useDispatch, useSelector } from 'react-redux';
 import { LinkContainer } from 'react-router-bootstrap';
 import { getPosts } from '../services/slices/components/blogs';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import LoginModal from './SignUp/loginForModal';
+import Footer from '../layout/footer';
 
 const Home = () => {
     const data: any[] = useSelector((state: any) => state.Post?.posts) || []
     const dispatch: any = useDispatch()
     const navigate = useNavigate()
+    const token = localStorage.getItem("authToken")
 
     const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
     const [show, setShow] = useState(false)
+    const [open, setOpen] = useState(false)
     const [selectedCategory, setSelectedCategory] = useState("")
 
-    const handleReadMore = (index: number) => {
-        setExpandedIndex(index === expandedIndex ? null : index)
-    }
+    // const handleReadMore = (index: number) => {
+    //     setExpandedIndex(index === expandedIndex ? null : index)
+    // }
 
     const handleShow = () => {
         setShow(true)
+    }
+
+    const handleHide = () => {
+        setOpen(false)
     }
 
     const handleClose = () => {
@@ -32,6 +40,18 @@ const Home = () => {
         navigate(`/posts?${queryParams}`)
     }
 
+    const handleCreateClick = () => {
+        if (token) {
+            navigate("/create")
+        } else {
+            setOpen(true)
+        }
+    }
+
+    const handleReadClick = (blogId: any) => {
+        navigate(`/post/${blogId}`)
+    }
+
 
     useEffect(() => {
         dispatch(getPosts()).catch((error: any) =>
@@ -40,20 +60,27 @@ const Home = () => {
     }, [dispatch])
 
 
-    const latestPosts = Array.isArray(data) ? data.slice().reverse().slice(0, 6) : [];
+    const latestPosts = Array.isArray(data) ? data.slice().reverse().slice(0, 3) : [];
 
     return (
         <div>
             {/* Navigation Bar */}
-            <Navbar bg="dark" variant="dark" expand="lg">
+            <Navbar bg="white" variant="white" expand="lg">
                 <Container>
                     <Navbar.Brand href="#home">My Blog</Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="me-auto">
                             <Nav.Link>Home</Nav.Link>
-                            <LinkContainer to='/create'><Nav.Link>Create</Nav.Link></LinkContainer>
-                            <LinkContainer to='/profile'><Nav.Link>Profile</Nav.Link></LinkContainer>
+                            <Nav.Link onClick={handleCreateClick}>Create</Nav.Link>
+                            <Nav.Link onClick={handleShow}>Explore</Nav.Link>
+
+                            {token ? (
+                                <LinkContainer to='/profile'><Nav.Link className='ms-auto'>Profile</Nav.Link></LinkContainer>
+
+                            ) : (
+                                <LinkContainer to='/login'><Nav.Link>Login</Nav.Link></LinkContainer>
+                            )} :
                         </Nav>
                     </Navbar.Collapse>
                 </Container>
@@ -61,13 +88,12 @@ const Home = () => {
 
             {/* Hero Section */}
             <div className="hero">
-                <h1>Inspiring Creativity and Innovation</h1>
-                <Button variant="light" size="lg" onClick={handleShow}>Explore</Button>
+                {/* <h1>Inspiring Creativity and Innovation</h1> */}
             </div>
 
             {/* Recent Posts */}
 
-            <Container className="mt-4">
+            <Container className="mt-4 slidePosts">
                 <Row>
                     <Col>
                         <h1 className="text-center mb-4">Latest Blogs</h1>
@@ -78,7 +104,7 @@ const Home = () => {
                         latestPosts.map((item: any, index: any) => {
                             const isExpanded = expandedIndex === index;
                             return (
-                                <Col key={index} md={4} className="mb-4">
+                                <Col key={item.id} md={4} className="mb-4">
                                     <Card>
                                         <Card.Img variant="top" src={item?.image} alt="Blog Image" />
                                         <Card.Body>
@@ -86,8 +112,8 @@ const Home = () => {
                                             <Card.Text className={isExpanded ? 'expanded' : 'collapsed'}>
                                                 {item.content}
                                             </Card.Text>
-                                            <Button variant="primary" onClick={() => handleReadMore(index)}>
-                                                {isExpanded ? 'Read Less' : 'Read More'}
+                                            <Button variant="success" className="ReadButton" onClick={() => handleReadClick(item._id)}>
+                                                Read More
                                             </Button>
                                         </Card.Body>
                                     </Card>
@@ -102,20 +128,7 @@ const Home = () => {
             </Container>
 
             {/* Footer */}
-            <footer className="bg-dark text-white text-center py-4 mt-4">
-                <Container>
-                    <Row>
-                        <Col>
-                            <p className="mb-0">&copy; {new Date().getFullYear()} My Blog. All Rights Reserved.</p>
-                            <p>Follow us on:
-                                <a href="#facebook" className="text-white mx-2">Facebook</a> |
-                                <a href="#twitter" className="text-white mx-2">Twitter</a> |
-                                <a href="#instagram" className="text-white mx-2">Instagram</a>
-                            </p>
-                        </Col>
-                    </Row>
-                </Container>
-            </footer>
+            <Footer />
 
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
@@ -151,6 +164,19 @@ const Home = () => {
                         Explore
                     </Button>
                 </Modal.Footer>
+            </Modal>
+
+            <Modal show={open} onHide={handleHide} className='shadow'>
+                <div className="modal-content rounded-4 shadow">
+                    <div className="modal-header p-5 pb-4 border-bottom-0 ">
+                        <h1 className=" mb-0 fs-2 ">Login Now</h1>
+                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={handleHide}></button>
+                    </div>
+
+                    <div className="modal-body p-5 pt-0">
+                        <LoginModal />
+                    </div>
+                </div>
             </Modal>
 
         </div >
