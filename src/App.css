@@ -113,3 +113,21 @@ footer a:hover {
     color: #fff;
     text-decoration: underline;
 }
+
+.googleButton {
+    display: block !important;
+    border: 0px !important;
+    border-radius: 3px !important;
+    box-shadow: rgba(0, 0, 0, 0.5) 0px 1px 2px !important;
+    color: black !important;
+    cursor: pointer !important;
+    margin: 5px !important;
+    width: calc(100% - 10px) !important;
+    overflow: hidden !important;
+    user-select: none !important;
+    height: 40px !important;
+    background: white !important;
+    text-align: center !important;
+    justify-content: center !important;
+    display: flex !important;
+}

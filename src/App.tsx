@@ -16,6 +16,7 @@ import ProfilePage from "./components/Profile/profile";
 import Explore from "./components/Posts/Explore";
 import SettingsPage from "./components/Profile/setting";
 import BlogPostDetail from "./components/Posts/postById";
+import GoogleLogin from "./components/SignUp/googleLogin";
 
 
 
@@ -35,6 +36,7 @@ const App = () => {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/" element={<Home />} />
+          <Route path="/oauth/callback" element={<GoogleLogin />} />
           <Route path="/create" element={<CreateBlogPage />} />
           <Route path="/forgetPassword" element={<ForgetPassword />} />
           <Route path="/resetPassword/:token" element={<ResetPassword />} />

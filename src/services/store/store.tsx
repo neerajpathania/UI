@@ -4,12 +4,14 @@ import { configureStore } from "@reduxjs/toolkit";
 import signUpSlice from "../slices/auth/signUp";
 import signInSlice from "../slices/auth/login";
 import postSlice from "../slices/components/blogs";
+import googleSlice from "../slices/auth/googleLogin";
 
 export const store = configureStore({
     reducer: {
         signUp: signUpSlice,
         signIn: signInSlice,
         Post: postSlice,
+        GoogleSignIn: googleSlice
     }
 });
 

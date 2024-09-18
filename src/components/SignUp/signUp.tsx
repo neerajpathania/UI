@@ -9,6 +9,7 @@ import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import GoogleLogin from "./googleLogin";
 
 const schema = yup.object().shape({
     email: yup
@@ -87,6 +88,7 @@ const SignUp = () => {
     };
 
 
+
     return (
         <>
             <Container>
@@ -142,6 +144,8 @@ const SignUp = () => {
                                     Sign Up
                                 </Button>
                             </Form>
+                            <p className="fs-6 mb-3 text-center mt-3">Or</p>
+                            <GoogleLogin />
                         </div>
                     </Col>
                 </Row>
