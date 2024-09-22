@@ -9,6 +9,8 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import GoogleLogin from "./googleLogin";
+
 
 const schema = yup.object().shape({
     email: yup
@@ -18,13 +20,6 @@ const schema = yup.object().shape({
     password: yup
         .string()
         .required("Password is required")
-        .matches(/^[^\s]*$/, "Password must not contain spaces")
-        .matches(
-            /^(?=.*[A-Z])/,
-            "Password must contain at least one uppercase letter"
-        )
-        .matches(/^(?=.*[0-9])/, "Password must contain at least one number")
-        .min(8, "Password must be atleast 8 characters long"),
 })
 
 interface FormData {
@@ -58,6 +53,7 @@ const LoginPage = () => {
     });
 
     const onSubmit: SubmitHandler<FormData> = async (data) => {
+        console.log("clicked")
         try {
             const formData = new FormData();
             formData.append("email", data.email);
@@ -66,22 +62,26 @@ const LoginPage = () => {
             dispatch(userLogin(formData))
                 .unwrap()
                 .then((res: any) => {
-                    if (res.success) {
+                    if (!res.success) {
+                        toast.error(res.message || "Incorrect Email or password")
+                    } else {
                         toast.success("Login successful")
                         navigate('/');
-                    } else if (res.error) {
-                        toast.error("Incorrect Email or password")
                     }
+
                 })
 
-        } catch (error) {
-            toast.error("Login Failed");
-            console.error("Submission Error:", error);
+        } catch (err) {
+            console.log(err, "errrrrrrrrrrr")
+            toast.error('An error occurred. Please try again.');
         }
     }
 
     const handleForgetButton = () => {
         navigate("/forgetPassword")
+    }
+    const handleSignup = () => {
+        navigate("/signup")
     }
 
 
@@ -123,13 +123,17 @@ const LoginPage = () => {
                                 <p className="text-red-500 text-sm mt-2">{errors?.password?.message}</p>
                             )}
                         </Form.Group>
-                        <Button variant="primary" type="submit" className="mt-3 w-100">
+                        <Button variant="success" type="submit" className="mt-3 w-100">
                             Login
                         </Button>
                     </Form>
-                    <div className="text-center mt-3">
+                    <div className='mb-1 text-end'>
                         <a onClick={handleForgetButton}>Forgot Password?</a>
                     </div>
+                    <p className="fs-6 mb-3 text-center mt-3">Or</p>
+                    <GoogleLogin />
+                    <h6 className='text-center' onClick={handleSignup}>Don't Have an account? Signup</h6>
+
                 </Col>
             </Row>
         </Container>

@@ -88,6 +88,25 @@ export const deletePost = createAsyncThunk(
     }
 )
 
+export const likePost = createAsyncThunk(
+    '/likePost',
+    async (data: any, { dispatch }) => {
+        console.log(data, ">>>>>>>>>>>>>>>>>>")
+        dispatch(startLoadingActivity())
+        try {
+            const response = await http.post(`/post/likePost?blogId=${data.blogId.id}&userId=${data.userId}`, {
+            })
+
+            if (response.status === 200) {
+                return response.data
+            }
+        } catch (error) {
+            console.error(error)
+            throw error;
+        }
+    }
+)
+
 export const editPost = createAsyncThunk(
     '/editPost',
     async (data: any, { dispatch }) => {
@@ -189,6 +208,18 @@ export const postSlice = createSlice({
 
             })
             .addCase(editPost.rejected, (state) => {
+                state.loading = false;
+            })
+
+            .addCase(likePost.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(likePost.fulfilled, (state, action) => {
+                state.loading = false;
+                state.posts = action.payload || [];
+
+            })
+            .addCase(likePost.rejected, (state) => {
                 state.loading = false;
             })
     }

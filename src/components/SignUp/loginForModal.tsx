@@ -9,6 +9,7 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import GoogleLogin from './googleLogin';
 
 const schema = yup.object().shape({
     email: yup
@@ -135,10 +136,7 @@ const LoginModal = () => {
                     </div>
                     <h6 className='text-center' onClick={handleSignup}>Dont't Have an account? Signup</h6>
                     <p className="fs-6 mb-3 text-center mt-3">Or</p>
-                    <button className="w-100 py-2 mb-2 btn btn-outline-secondary rounded-3" type="submit">
-                        <svg className="bi me-1" width="16" height="16"><use xlinkHref="#github"></use></svg>
-                        Sign in with Gogle
-                    </button>
+                    <GoogleLogin />
                 </div>
 
             </Row>

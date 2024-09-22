@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { userGoogleLogin } from "../../services/slices/auth/googleLogin";
 import { useNavigate } from "react-router-dom";
-import { GoogleLoginButton } from "react-social-login-buttons";
+import GoogleIcon from '@mui/icons-material/Google';
 
 
 const GoogleLogin = () => {
@@ -37,9 +37,10 @@ const GoogleLogin = () => {
 
     return (
         <>
-            <GoogleLoginButton className="googleButton"
+            <button className="googleButton"
                 onClick={handleGoogleLogin}
-            />
+            ><GoogleIcon className="me-2" /> Sign In with google
+            </button>
         </>
     );
 };

@@ -142,7 +142,7 @@ const ProfilePage = () => {
                 </Row>
                 <Row>
                     <Col md={12}>
-                        <h3 className="mb-4 text-center">My Posts</h3>
+                        <h3 className="mb-4 text-center typewriter">My Posts</h3>
                         <Row>
                             {posts.length > 0 ? (
                                 posts.map((post: any, index: any) => {

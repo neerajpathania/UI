@@ -6,6 +6,11 @@
     -webkit-box-orient: vertical;
 }
 
+a {
+    text-decoration: none;
+    cursor: pointer;
+}
+
 .expanded {
     display: block;
 }
@@ -118,7 +123,7 @@ footer a:hover {
     display: block !important;
     border: 0px !important;
     border-radius: 3px !important;
-    box-shadow: rgba(0, 0, 0, 0.5) 0px 1px 2px !important;
+    /* box-shadow: rgba(0, 0, 0, 0.5) 0px 1px 2px !important; */
     color: black !important;
     cursor: pointer !important;
     margin: 5px !important;
@@ -130,4 +135,133 @@ footer a:hover {
     text-align: center !important;
     justify-content: center !important;
     display: flex !important;
+}
+
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* Fade-in effect for page content */
+.fade-in {
+    opacity: 0;
+    animation: fadeInAnimation 1s forwards;
+}
+
+@keyframes fadeInAnimation {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* Fade-out effect for page transitions */
+.fade-out {
+    opacity: 1;
+    animation: fadeOutAnimation 1s forwards;
+}
+
+@keyframes fadeOutAnimation {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+
+.typewriter {
+    overflow: hidden;
+    border-right: .15em solid orange;
+    white-space: nowrap;
+    margin: 0 auto;
+    letter-spacing: .15em;
+    animation: typing 3.5s steps(40, end), blink-caret .75s step-end infinite;
+}
+
+@keyframes typing {
+    from {
+        width: 0
+    }
+
+    to {
+        width: 100%
+    }
+}
+
+@keyframes blink-caret {
+
+    from,
+    to {
+        border-color: transparent
+    }
+
+    50% {
+        border-color: orange;
+    }
+}
+
+button:hover {
+    transform: scale(1.1);
+    transition: transform 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.button-cta {
+    background-color: #3498db;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.button-cta:hover {
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+input:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+    transition: all 0.3s ease;
+}
+
+.blogArea {
+    border: 1px solid black;
+}
+
+.navbar-expand-lg .navbar-collapse {
+    display: flex !important;
+    flex-basis: auto;
+    justify-content: center;
 }

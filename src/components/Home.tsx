@@ -67,10 +67,12 @@ const Home = () => {
             {/* Navigation Bar */}
             <Navbar bg="white" variant="white" expand="lg">
                 <Container>
-                    <Navbar.Brand href="#home">My Blog</Navbar.Brand>
+                    <div>
+                        {/* <Navbar.Brand><img src='src/assets/Images/Let’s Blog.png' className='logo w-25 h-25 p-0'></img></Navbar.Brand> */}
+                    </div>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
-                        <Nav className="me-auto">
+                        <Nav className="fs-5 text-dark">
                             <Nav.Link>Home</Nav.Link>
                             <Nav.Link onClick={handleCreateClick}>Create</Nav.Link>
                             <Nav.Link onClick={handleShow}>Explore</Nav.Link>
@@ -80,7 +82,7 @@ const Home = () => {
 
                             ) : (
                                 <LinkContainer to='/login'><Nav.Link>Login</Nav.Link></LinkContainer>
-                            )} :
+                            )}
                         </Nav>
                     </Navbar.Collapse>
                 </Container>
